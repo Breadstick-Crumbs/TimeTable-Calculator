@@ -6,7 +6,6 @@ from io import BytesIO
 
 st.title("Roll Number Filter Tool")
 
-# Use a form to group inputs and a submit button
 with st.form(key='roll_number_form'):
     uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
     target = st.number_input("Enter roll number (1-150)", min_value=1, max_value=150, step=1)
@@ -17,10 +16,8 @@ if submit_button and uploaded_file:
     wb = openpyxl.load_workbook(uploaded_file)
     ws = wb.active
 
-    # Define the highlight fill color (yellow).
     highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # Process rows starting from row 3 (assuming rows 1 and 2 are headers)
     for row in ws.iter_rows(min_row=3, min_col=4, max_col=ws.max_column):
         for cell in row:
             original_value = cell.value
@@ -53,14 +50,11 @@ if submit_button and uploaded_file:
                         continue
 
             if has_target:
-                # Set the cell value to the target and highlight it.
                 cell.value = str(target)
                 cell.fill = highlight_fill
             else:
-                # Clear cells that don't include the target roll.
                 cell.value = None
 
-    # Save the modified workbook to a BytesIO stream.
     output = BytesIO()
     wb.save(output)
     output.seek(0)
